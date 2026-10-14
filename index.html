@@ -1081,30 +1081,22 @@
         return;
       }
 
-      status.innerText = "シグナリングサーバーに接続中...";
+      status.innerText = "接続中...";
       peer = new Peer();
 
-      peer.on('open', (myId) => {
-        status.innerText = "ホストへ接続中...";
+      peer.on('open', () => {
         const conn = peer.connect(roomId);
         connections = [conn];
 
         conn.on('open', () => {
-          status.innerText = "接続成功！ホストからの開始データを待っています...";
+          status.innerText = "接続成功！ホストからの開始を待っています...";
         });
 
-        conn.on('data', (data) => {
-          handleRemoteData(data);
-        });
-
-        conn.on('close', () => {
-          alert("ホストとの接続が切断されました。");
-        });
+        conn.on('data', (data) => handleRemoteData(data));
       });
 
       peer.on('error', (err) => {
-        console.error("PeerJS Error:", err);
-        status.innerText = `接続エラー: ${err.type} (部屋IDを確認してください)`;
+        status.innerText = "接続エラー: 部屋IDを確認してください。";
       });
     }
 
